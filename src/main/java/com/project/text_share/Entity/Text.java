@@ -33,8 +33,11 @@ public class Text {
     private boolean isEncrypted;
 
     private String password;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private String userId;
+//    private String userId;
 
     private String contentType;
 
