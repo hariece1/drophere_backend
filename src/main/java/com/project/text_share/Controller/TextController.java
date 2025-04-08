@@ -18,26 +18,27 @@ public class TextController {
     @Autowired
     private TextService textService;
 
+    @GetMapping("/check")
+    public String check(){
+        return "OK";
+    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createText(@RequestBody TextCreateRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-
+        System.out.println("Hi");
         String slug = textService.createText(request, username);
         return ResponseEntity.ok(Map.of("slug", slug, "message", "Text shared successfully!"));
     }
     @GetMapping("/get/{slug}")
-    public ResponseEntity<TextResponse> getTextBySlug(@PathVariable String slug) {
-        Text text = textService.getTextBySlug(slug);
+    public ResponseEntity<TextResponse> getTextBySlug(
+            @PathVariable String slug,
+            @RequestParam(required = false) String password) {
 
-        TextResponse response = new TextResponse(
-                text.getTitle(),
-                text.getContent()
-        );
-
+        Text text = textService.getTextBySlug(slug, password);
+        TextResponse response = new TextResponse(text.getTitle(), text.getContent());
         return ResponseEntity.ok(response);
     }
-
 
 }

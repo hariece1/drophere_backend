@@ -6,6 +6,6 @@ import com.project.text_share.Entity.Text;
 
 public interface TextService {
     String createText(TextCreateRequest request, String username);
-    Text getTextBySlug(String slug);
+    Text getTextBySlug(String slug,String password);
 
 }
