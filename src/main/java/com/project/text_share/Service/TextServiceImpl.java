@@ -1,6 +1,7 @@
 package com.project.text_share.Service;
 
 import com.project.text_share.DTO.TextCreateRequest;
+import com.project.text_share.DTO.TextResponseALL;
 import com.project.text_share.Entity.Text;
 import com.project.text_share.Entity.User;
 import com.project.text_share.Repo.TextRepository;
@@ -12,7 +13,9 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TextServiceImpl implements TextService{
@@ -33,7 +36,7 @@ public class TextServiceImpl implements TextService{
         try {
             User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
-
+            System.out.println(request);
             Text text = new Text();
             text.setTitle(request.getTitle());
             text.setContent(request.getContent());
@@ -67,6 +70,7 @@ public class TextServiceImpl implements TextService{
 
             // 🌐 Slug generation
             String slug = generateSlug(username, request.getTitle());
+
             text.setSlug(slug);
 
             textRepository.save(text);
@@ -109,6 +113,17 @@ public class TextServiceImpl implements TextService{
         textRepository.save(text);
 
         return text;
+    }
+
+    public List<TextResponseALL> getTextsByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Text> texts = textRepository.findByUser(user);
+
+        return texts.stream()
+                .map(t -> new TextResponseALL(t.getTitle(), t.getContent(), t.getSlug(), t.getCreatedAt(), t.getExpiresAt()))
+                .collect(Collectors.toList());
     }
 
 

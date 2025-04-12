@@ -6,11 +6,24 @@ import lombok.Data;
 public class TextCreateRequest {
     private String title;
     private String content;
-    private boolean isEncrypted;
+    private boolean Encrypted;
     private String password;  // nullable
-    private boolean isViewable;
+    private boolean Viewable;
     private String contentType;
     private Long userId;      // link to user
     private String expiresAt; // ISO format or use LocalDateTime
+    @Override
+    public String toString() {
+        return "TextCreateRequest{" +
+                "title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", isEncrypted=" + Encrypted +
+                ", password='" + (password != null ? password : "null") + '\'' +
+                ", isViewable=" + Viewable +
+                ", contentType='" + contentType + '\'' +
+                ", userId=" + userId +
+                ", expiresAt='" + expiresAt + '\'' +
+                '}';
+    }
 }
 
