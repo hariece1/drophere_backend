@@ -12,5 +12,5 @@ public interface TextService {
     String createText(TextCreateRequest request, String username);
     Text getTextBySlug(String slug,String password);
     List<TextResponseALL> getTextsByUsername(String username);
-
+    void deleteTextBySlug(String slug, String username);
 }

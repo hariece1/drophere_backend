@@ -125,6 +125,16 @@ public class TextServiceImpl implements TextService{
                 .map(t -> new TextResponseALL(t.getTitle(), t.getContent(), t.getSlug(), t.getCreatedAt(), t.getExpiresAt()))
                 .collect(Collectors.toList());
     }
+    public void deleteTextBySlug(String slug, String username) {
+        Text text = textRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Text not found"));
+
+        if (!text.getUser().getUsername().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You do not have permission to delete this text");
+        }
+
+        textRepository.delete(text);
+    }
 
 
 

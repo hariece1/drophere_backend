@@ -69,5 +69,13 @@ public class TextController {
         List<TextResponseALL> texts = textService.getTextsByUsername(username);
         return ResponseEntity.ok(texts);
     }
+    @DeleteMapping("/delete/{slug}")
+    public ResponseEntity<?> deleteText(@PathVariable String slug) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        textService.deleteTextBySlug(slug, username);
+        return ResponseEntity.ok(Map.of("message", "Text deleted successfully!"));
+    }
+
 
 }
