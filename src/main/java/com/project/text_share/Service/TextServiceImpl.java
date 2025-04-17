@@ -30,7 +30,6 @@ public class TextServiceImpl implements TextService{
         this.userRepository = userRepository;
     }
 
-
     @Override
     public String createText(TextCreateRequest request, String username) {
         try {
@@ -46,7 +45,7 @@ public class TextServiceImpl implements TextService{
             text.setUser(user);
             text.setCreatedAt(LocalDateTime.now());
             System.out.println("Bye");
-            // 🔐 Encrypt password only if enabled and password is provided
+            //  Encrypt password only if enabled and password is provided
             if (request.isEncrypted() && request.getPassword() != null && !request.getPassword().isEmpty()) {
                 try {
                     text.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -57,7 +56,7 @@ public class TextServiceImpl implements TextService{
                 text.setPassword(null); // Not encrypted or password not provided
             }
 
-            // 🕒 Expiration logic
+            //  Expiration logic
             try {
                 if (request.getExpiresAt() != null && !request.getExpiresAt().isBlank()) {
                     text.setExpiresAt(LocalDateTime.parse(request.getExpiresAt()));
@@ -68,7 +67,7 @@ public class TextServiceImpl implements TextService{
                 throw new RuntimeException("Invalid expiration date format");
             }
 
-            // 🌐 Slug generation
+            //  Slug generation
             String slug = generateSlug(username, request.getTitle());
 
             text.setSlug(slug);
