@@ -1,9 +1,9 @@
 package com.project.text_share.Service;
 
-import com.project.text_share.Entity.User;
+import com.project.text_share.Entity.MasterUser;
 
 public interface UserService {
-    User registerUser(User user);
-    User authenticate(String username, String password);
+    MasterUser registerUser(MasterUser masterUser);
+    MasterUser authenticate(String username, String password);
 
 }

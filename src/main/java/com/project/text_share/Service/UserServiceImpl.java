@@ -1,6 +1,6 @@
 package com.project.text_share.Service;
 
-import com.project.text_share.Entity.User;
+import com.project.text_share.Entity.MasterUser;
 import com.project.text_share.Repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,39 +16,39 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User registerUser(User user) {
+    public MasterUser registerUser(MasterUser masterUser) {
         // Check if username/email already exists
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(masterUser.getUsername()).isPresent()) {
             throw new RuntimeException("Username already taken");
         }
 
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(masterUser.getEmail()).isPresent()) {
             throw new RuntimeException("Email already registered");
         }
 
         // Set timestamps
-        user.setCreatedAt(LocalDateTime.now());
-        user.setLastSignIn(LocalDateTime.now());
+        masterUser.setCreatedAt(LocalDateTime.now());
+        masterUser.setLastSignIn(LocalDateTime.now());
 
         // Optional: Encode password
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        masterUser.setPassword(passwordEncoder.encode(masterUser.getPassword()));
 
-        return userRepository.save(user);
+        return userRepository.save(masterUser);
     }
     @Override
-    public User authenticate(String username, String password) {
-        Optional<User> userOpt = userRepository.findByUsername(username);
+    public MasterUser authenticate(String username, String password) {
+        Optional<MasterUser> userOpt = userRepository.findByUsername(username);
         if (userOpt.isEmpty()) {
             throw new RuntimeException("User not found");
         }
 
-        User user = userOpt.get();
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        MasterUser masterUser = userOpt.get();
+        if (!passwordEncoder.matches(password, masterUser.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
 
-        user.setLastSignIn(LocalDateTime.now());
-        return userRepository.save(user);
+        masterUser.setLastSignIn(LocalDateTime.now());
+        return userRepository.save(masterUser);
     }
 
 }

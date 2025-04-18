@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class MasterUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

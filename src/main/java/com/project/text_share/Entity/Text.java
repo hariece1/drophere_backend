@@ -34,8 +34,8 @@ public class Text {
 
     private String password;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "master_user_id")
+    private MasterUser masterUser;
 
 //    private String userId;
 

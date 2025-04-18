@@ -1,12 +1,8 @@
 package com.project.text_share.Service;
 
-import com.project.text_share.DTO.TextCreateRequest;
-import com.project.text_share.DTO.TextResponseALL;
-import com.project.text_share.Entity.Text;
-import com.project.text_share.Entity.User;
-import com.project.text_share.Repo.TextRepository;
-import com.project.text_share.Repo.UserRepository;
-import lombok.RequiredArgsConstructor;
+import com.project.text_share.DTO.*;
+import com.project.text_share.Entity.*;
+import com.project.text_share.Repo.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +28,7 @@ public class TextServiceImpl implements TextService{
     @Override
     public String createText(TextCreateRequest request, String username) {
         try {
-            User user = userRepository.findByUsername(username)
+            MasterUser masterUser = userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             System.out.println(request);
             Text text = new Text();
@@ -42,7 +37,7 @@ public class TextServiceImpl implements TextService{
             text.setEncrypted(request.isEncrypted());
             text.setViewable(request.isViewable());
             text.setContentType(request.getContentType());
-            text.setUser(user);
+            text.setMasterUser(masterUser);
             text.setCreatedAt(LocalDateTime.now());
             System.out.println("Bye");
             //  Encrypt password only if enabled and password is provided
@@ -115,10 +110,10 @@ public class TextServiceImpl implements TextService{
     }
 
     public List<TextResponseALL> getTextsByUsername(String username) {
-        User user = userRepository.findByUsername(username)
+        MasterUser masterUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<Text> texts = textRepository.findByUser(user);
+        List<Text> texts = textRepository.findByMasterUser(masterUser);
 
         return texts.stream()
                 .map(t -> new TextResponseALL(t.getTitle(), t.getContent(), t.getSlug(), t.getCreatedAt(), t.getExpiresAt()))
@@ -128,7 +123,7 @@ public class TextServiceImpl implements TextService{
         Text text = textRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Text not found"));
 
-        if (!text.getUser().getUsername().equals(username)) {
+        if (!text.getMasterUser().getUsername().equals(username)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You do not have permission to delete this text");
         }
 
