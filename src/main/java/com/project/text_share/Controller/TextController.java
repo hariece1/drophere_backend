@@ -22,14 +22,10 @@ public class TextController {
     @Autowired
     private TextService textService;
 
-    @GetMapping("/check")
-    public String check(){
-        return "OK";
-    }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<?> createText(@RequestBody TextCreateRequest request) throws JsonProcessingException {
-        System.out.println("Incoming JSON: " + new ObjectMapper().writeValueAsString(request));
+//        System.out.println("Incoming JSON: " + new ObjectMapper().writeValueAsString(request));
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
 //        System.out.println(request);
@@ -37,7 +33,7 @@ public class TextController {
         return ResponseEntity.ok(Map.of("slug", slug, "message", "Text shared successfully!"));
     }
 
-    @GetMapping("/get/{slug}")
+    @GetMapping("/{slug}")
     public ResponseEntity<TextResponse> getTextBySlug(
             @PathVariable String slug,
             @RequestParam(required = false) String password) {
@@ -47,7 +43,7 @@ public class TextController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/download/txt/{slug}")
+    @GetMapping("/download/{slug}")
     public ResponseEntity<byte[]> downloadTextAsTxt(
             @PathVariable String slug,
             @RequestParam(required = false) String password) {
@@ -61,15 +57,14 @@ public class TextController {
                 .header("Content-Type", "text/plain")
                 .body(content);
     }
-    @GetMapping("/getuserslung")
+    @GetMapping("/getall")
     public ResponseEntity<List<TextResponseALL>> getMyTexts() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        System.out.println("JJJJJ");
         List<TextResponseALL> texts = textService.getTextsByUsername(username);
         return ResponseEntity.ok(texts);
     }
-    @DeleteMapping("/delete/{slug}")
+    @DeleteMapping("/{slug}")
     public ResponseEntity<?> deleteText(@PathVariable String slug) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
