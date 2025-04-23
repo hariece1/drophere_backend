@@ -3,6 +3,7 @@ package com.project.text_share.Service;
 import com.project.text_share.DTO.*;
 import com.project.text_share.Entity.*;
 import com.project.text_share.Repo.*;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,11 +27,12 @@ public class TextServiceImpl implements TextService{
     }
 
     @Override
+    @Transactional
     public String createText(TextCreateRequest request, String username) {
         try {
             MasterUser masterUser = userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            System.out.println(request);
+//            System.out.println(request);
             Text text = new Text();
             text.setTitle(request.getTitle());
             text.setContent(request.getContent());
